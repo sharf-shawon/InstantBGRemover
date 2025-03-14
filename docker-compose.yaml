@@ -1,10 +1,16 @@
 services:
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python manage.py runserver 0.0.0.0:8000 --skip-checks
     volumes:
       - .:/app
     env_file:
       - .env
     ports:
       - "8080:8000"
+    networks:
+      - dev_network
+
+networks:
+  dev_network:
+    external: true

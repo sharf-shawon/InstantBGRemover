@@ -36,26 +36,7 @@
       src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
     ></script>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-    <style>
-      @keyframes backgroundFade {
-        from {
-          opacity: 1;
-        }
-        to {
-          opacity: 0;
-        }
-      }
-      .bg-fade {
-        animation: backgroundFade 1s ease-out forwards;
-      }
-      .drop-zone {
-        transition: all 0.3s ease;
-      }
-      .drop-zone.dragover {
-        transform: scale(1.02);
-        border-color: #4f46e5;
-      }
-    </style>
+    
   </head>
   <body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
 
@@ -63,6 +44,9 @@
     
     {% block content %}{% endblock %}
     
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/your-kit-code.js" crossorigin="anonymous"></script>
     {% include "remover/footer.html" %}
+
   </body>
 </html>
