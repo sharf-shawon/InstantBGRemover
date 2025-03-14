@@ -2,7 +2,7 @@ services:
   web:
     build:
       dockerfile: Dockerfile.prod
-    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn --timeout 120 config.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - static_volume:/app/static
       - media_volume:/app/media
