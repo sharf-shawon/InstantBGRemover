@@ -1,0 +1,101 @@
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white mt-24">
+        <div class="container mx-auto px-6 pt-10 pb-6">
+          <!-- Footer Top with Links -->
+          <div class="flex flex-wrap justify-between mb-8">
+            <!-- Logo & Description -->
+            <div class="w-full md:w-1/3 mb-8 md:mb-0">
+              <h2 class="text-2xl font-bold mb-4">Instant Background Remover</h2>
+              <p class="text-gray-400 mb-4">
+                FREE Image Background removal tool without using losing resolution
+                - preserving 100% image quality with every use.
+              </p>
+              <!-- Social Icons -->
+              <div class="flex space-x-4">
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-white transition-colors"
+                >
+                  <i class="fab fa-twitter"></i>
+                </a>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-white transition-colors"
+                >
+                  <i class="fab fa-facebook"></i>
+                </a>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-white transition-colors"
+                >
+                  <i class="fab fa-instagram"></i>
+                </a>
+                <a
+                  href="#"
+                  class="text-gray-400 hover:text-white transition-colors"
+                >
+                  <i class="fab fa-github"></i>
+                </a>
+              </div>
+            </div>
+  
+            <!-- Quick Links -->
+            <div class="w-full md:w-1/4 mb-8 md:mb-0">
+              <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+              <ul class="space-y-2">
+                <li>
+                  <a
+                    href="{% url 'index' %}"
+                    class="text-gray-400 hover:text-white transition-colors"
+                    >Home</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="{% url 'about' %}"
+                    class="text-gray-400 hover:text-white transition-colors"
+                    >About Us</a
+                  >
+                </li>
+              </ul>
+            </div>
+  
+            <!-- Legal Links -->
+            <div class="w-full md:w-1/4">
+              <h3 class="text-lg font-semibold mb-4">Legal</h3>
+              <ul class="space-y-2">
+                <li>
+                  <a
+                    href="{% url 'tos' %}"
+                    class="text-gray-400 hover:text-white transition-colors"
+                    >Terms of Service</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+  
+          <!-- Divider -->
+          <div class="border-t border-gray-800 my-6"></div>
+  
+          <!-- Copyright -->
+          <div class="flex flex-col md:flex-row justify-between items-center">
+            <p class="text-gray-400 text-sm mb-4 md:mb-0">
+              ©
+              <script>
+                document.write(new Date().getFullYear());
+              </script>
+              InstantBGRemover. All rights reserved.
+            </p>
+            <p class="text-gray-500 text-sm">
+              Powered by
+              <a
+                href="https://shawon.me"
+                class="text-gray-400 hover:text-white transition-colors"
+                >Sharfuddin Shawon</a
+              >
+            </p>
+          </div>
+        </div>
+      </footer>

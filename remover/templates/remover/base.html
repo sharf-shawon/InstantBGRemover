@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}InstantBGRemover - Free High-Res Background Removal, Zero Quality Loss{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}Remove image backgrounds instantly. 100% resolution preservation. Fast, free, and no quality loss.{% endblock %}" />
+    <meta name="keywords" content="{% block meta_keywords %}remove background, AI background remover, instant bg removal, free image editing, high resolution background removal{% endblock %}" />
+  
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{% block og_url %}https://bgrem.shawon.me{% endblock %}" />
+    <meta property="og:title" content="{% block og_title %}InstantBGRemover - Free High-Res Background Removal, Zero Quality Loss{% endblock %}" />
+    <meta property="og:description" content="{% block og_description %}Get crystal-clear background removal without losing resolution. Maintain original image quality with our direct processing technology.{% endblock %}" />
+    <meta property="og:image" content="{% block og_image %}https://bgrem.shawon.me/instant-background-remover-cover.png{% endblock %}" />
+  
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="{% block twitter_url %}https://bgrem.shawon.me{% endblock %}" />
+    <meta property="twitter:title" content="{% block twitter_title %}InstantBGRemover - Free High-Res Background Removal, Zero Quality Loss{% endblock %}" />
+    <meta property="twitter:description" content="{% block twitter_description %}100% resolution-preserving image background removal. No BS, no quality loss, just instant results.{% endblock %}" />
+    <meta property="twitter:image" content="{% block twitter_image %}https://bgrem.shawon.me/instant-background-remover-cover.png{% endblock %}" />
+  
+
+
+    <!-- Styles -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <style>
+      @keyframes backgroundFade {
+        from {
+          opacity: 1;
+        }
+        to {
+          opacity: 0;
+        }
+      }
+      .bg-fade {
+        animation: backgroundFade 1s ease-out forwards;
+      }
+      .drop-zone {
+        transition: all 0.3s ease;
+      }
+      .drop-zone.dragover {
+        transform: scale(1.02);
+        border-color: #4f46e5;
+      }
+    </style>
+  </head>
+  <body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
+
+    {% include "remover/nav.html" %}
+    
+    {% block content %}{% endblock %}
+    
+    {% include "remover/footer.html" %}
+  </body>
+</html>

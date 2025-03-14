@@ -1,0 +1,170 @@
+{% extends 'remover/base.html' %}
+{% block content %}
+    <div x-data="{ isProcessing: false, outputImage: null, buttonText: 'Remove Background Now' }" class="container mx-auto px-4 py-12">
+        <!-- Header -->
+        <header class="text-center mb-16">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                Remove Image Backgrounds <br>
+                <span class="text-blue-600">100% Resolution Preservation</span>
+            </h1>
+            <p class="text-xl text-gray-600 mb-8">
+                No Quality Loss • Instant Results • Free Forever
+            </p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="max-w-4xl mx-auto">
+            <!-- Upload Form -->
+            <form id="upload-form" 
+                  method="post" 
+                  enctype="multipart/form-data"
+                  hx-post="{% url 'remove_bg' %}"
+                  hx-target="#image_container"
+                  hx-swap="none"
+                  class="bg-white rounded-2xl shadow-xl p-8 mb-8"
+                  @drop.prevent="document.getElementById('file_input').files = event.dataTransfer.files; previewImage(event)"
+                  @dragover.prevent="$el.classList.add('dragover')"
+                  @dragleave.prevent="$el.classList.remove('dragover')"
+                  x-data="{ isDragging: false }"
+                  :class="isDragging ? 'dragover' : ''">
+                  
+                {% csrf_token %}
+                
+                <div class="drop-zone border-4 border-dashed border-gray-200 rounded-xl p-12 text-center cursor-pointer"
+                     @click="document.getElementById('file_input').click()">
+                    
+                    <input type="file" 
+                           id="file_input" 
+                           name="original"
+                           class="hidden" 
+                           accept="image/*"
+                           @change="previewImage($event)">
+                    
+                    <div class="space-y-4">
+                        <div class="text-blue-500 text-6xl mb-4">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-900">
+                            Drag & Drop or Click to Upload
+                        </h3>
+                        <p class="text-gray-500">
+                            Supports PNG, JPG, WEBP up to 5MB/5000px
+                        </p>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 my-8 justify-center">
+                <button type="submit"
+                        form="upload-form"
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold transition-all transform hover:scale-105"
+                        @click="isProcessing = true"
+                        hx-indicator=".processing-indicator">
+                    <i class="fas fa-magic mr-2"></i><span x-text="buttonText"></span>
+                </button>
+
+                <a x-bind:href="outputImage" 
+                    download 
+                    class="bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-xl font-semibold transition-all transform hover:scale-105 hidden"
+                    id="download_btn"><i class="fas fa-download mr-2"></i>Download Result</a>
+            </div>
+
+            <!-- Image Preview -->
+            <div class="relative group max-w-96" id="image_container">
+                <img id="preview_image" 
+                     class="w-full h-auto rounded-2xl shadow-lg hidden" 
+                     src="#" 
+                     alt="Uploaded image preview">
+                
+                <!-- Processing Overlay -->
+                <div x-show="isProcessing" 
+                     class="absolute inset-0 bg-black bg-opacity-50 rounded-2xl flex items-center justify-center">
+                    <div class="text-white text-xl animate-pulse">
+                        <i class="fas fa-magic mr-2"></i> Removing Background...
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- USP Section -->
+        <section class="mt-18 text-center">
+            <h2 class="text-3xl font-bold text-gray-900 mb-8">Why InstantBGRemover?</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <div class="text-blue-500 text-4xl mb-4">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Instant Processing</h3>
+                    <p class="text-gray-600">No queues, no waiting - get results in milliseconds</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <div class="text-blue-500 text-4xl mb-4">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Full Resolution</h3>
+                    <p class="text-gray-600">Get output matching your original image dimensions</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <div class="text-blue-500 text-4xl mb-4">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Great Results</h3>
+                    <p class="text-gray-600">Deterministic algorithm ensures perfect results every time</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        function previewImage(event) {
+            const input = event.target;
+            const preview = document.getElementById('preview_image');
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Handle HTMX response
+        htmx.on('htmx:afterSwap', function(evt) {
+            const response = JSON.parse(evt.detail.xhr.responseText);
+            const downloadBtn = document.getElementById('download_btn');
+            const button = document.querySelector('button[type="submit"]');
+            
+            document.getElementById('preview_image').classList.add('bg-fade');
+            setTimeout(() => {
+                document.getElementById('image_container').innerHTML = `
+                    <img src="${response.output_url}" 
+                         class="w-full h-auto rounded-2xl shadow-lg animate__animated animate__fadeIn">
+                `;
+                downloadBtn.href = response.output_url;
+                downloadBtn.classList.remove('hidden');
+                
+                // Update button text
+                button.querySelector('span').textContent = 'Remove Another Background';
+                button.onclick = () => resetPage();
+            }, 1000);
+        });
+
+        // Reset page function
+        function resetPage() {
+            location.reload()
+        }
+
+        // Add CSRF token to HTMX requests
+        document.body.addEventListener('htmx:configRequest', (event) => {
+            event.detail.headers['X-CSRFToken'] = "{{ csrf_token }}";
+        });
+    </script>
+    
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/your-kit-code.js" crossorigin="anonymous"></script>
+    
+{% endblock %}
