@@ -57,10 +57,6 @@ def remove_background(request):
             # Update model with processed image path
             image_obj.processed.name = output_path
             image_obj.save()
-            print(JsonResponse({
-                'input_url': os.path.join(settings.MEDIA_URL, new_upload_path),
-                'output_url': os.path.join(settings.MEDIA_URL, output_path)
-            }))
             # Return the JSON response
             return JsonResponse({
                 'input_url': os.path.join(settings.MEDIA_URL, new_upload_path),
