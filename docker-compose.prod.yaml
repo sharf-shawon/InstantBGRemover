@@ -1,5 +1,5 @@
 services:
-  web:
+  app:
     build:
       dockerfile: Dockerfile.prod
     command: gunicorn --timeout 120 config.wsgi:application --bind 0.0.0.0:8000
@@ -12,15 +12,14 @@ services:
       - 8000
   nginx:
     image: nginx:latest
-    # ports:
-    #   - "80:80"
     volumes:
-      - ./nginx/conf.d/app.conf:/etc/nginx/nginx.conf:ro
       - static_volume:/app/static
       - media_volume:/app/media
-
+      - ./nginx/conf.d/app.conf:/etc/nginx/nginx.conf:ro
+    # ports:
+    #   - "80:80"
     depends_on:
-      - web
+      - app
 volumes:
   static_volume:
   media_volume:
