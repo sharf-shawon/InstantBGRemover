@@ -5,6 +5,3 @@
 **/.venv
 *.sqlite3
 media/*
-.env
-.env.dev
-.env.prod
