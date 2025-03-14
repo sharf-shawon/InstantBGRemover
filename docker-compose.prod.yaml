@@ -12,8 +12,8 @@ services:
       - 8000
   nginx:
     image: nginx:latest
-    ports:
-      - "80:80"
+    # ports:
+    #   - "80:80"
     volumes:
       - ./nginx/conf.d/app.conf:/etc/nginx/nginx.conf:ro
       - static_volume:/app/static
