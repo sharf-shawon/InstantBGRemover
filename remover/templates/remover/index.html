@@ -158,10 +158,10 @@
             location.reload()
         }
 
-        // Add CSRF token to HTMX requests
+        {% comment %} // Add CSRF token to HTMX requests
         document.body.addEventListener('htmx:configRequest', (event) => {
             event.detail.headers['X-CSRFToken'] = "{{ csrf_token }}";
-        });
+        }); {% endcomment %}
     </script>
     
     <!-- Font Awesome -->
