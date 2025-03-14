@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.urls import path
-from remover.views import remove_background, index, tos, about, faq
+from remover.views import remove_background, index, tos, about, faq, image_slider
 
 urlpatterns = [
     path("", index, name="index"),  # This will serve your frontend
@@ -8,4 +8,5 @@ urlpatterns = [
     path("about-us/", about, name="about"),
     path("frequently-asked-questions/", faq, name="faq"),
     path("remove-bg/", remove_background, name="remove_bg"),
+    path("image-slider/", image_slider, name="image_slider"),
 ]

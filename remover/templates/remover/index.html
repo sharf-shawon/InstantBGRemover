@@ -13,7 +13,7 @@
           100% free, no signups, and no quality loss. Get perfect transparent backgrounds in seconds.
         </p>
         <a href="#upload-form" class="bg-white text-indigo-700 hover:bg-indigo-50 px-8 py-3 rounded-lg font-semibold shadow-lg inline-block transition duration-300 animate__animated animate__fadeInUp animate__delay-2s">
-          Remove Background Now
+          Remove Background Now ⬇️ 
         </a>
       </div>
       <div class="md:w-1/2 animate__animated animate__fadeIn animate__delay-3s">
@@ -138,30 +138,22 @@
         
         <div class="flex justify-center mb-8">
           <div class="relative max-w-md w-full">
-            <div class="relative">
-              <!-- Original image (will fade out) -->
-              <img 
-                :src="previewUrl" 
-                class="mx-auto max-h-96 max-w-full rounded absolute left-0 right-0 top-0"
-                id="original-img"
-                x-show="showTransition"
-                x-transition:leave="transition-opacity duration-1000"
-                x-transition:leave-start="opacity-100"
-                x-transition:leave-end="opacity-0"
-                alt="Original image"
-              />
-              
-              <!-- Processed image with transparent background -->
-              <img 
-                :src="resultUrl" 
-                class="mx-auto max-h-96 max-w-auto rounded"
-                id="result-img" 
-                alt="Processed image with transparent background" 
-              />
+            <!-- Image Comparison Slider -->
+            <div id="comparison" class="mx-auto" style="width: 100%; height: auto; overflow: hidden;">
+              <figure>
+                <!-- The result image (background removed) -->
+                <img :src="resultUrl" style="width: 100%; height: auto; display: block;" alt="Processed image" id="result-image" @load="adjustImageHeights()"/>
+                
+                <!-- The original image in a divisor container -->
+                <div id="divisor">
+                  <img :src="previewUrl" style="width: 100%; object-fit: cover; object-position: 0% 100%; display: block;" alt="Original image" id="original-image" @load="adjustImageHeights()"/>
+                </div>
+              </figure>
+              <input type="range" min="0" max="100" value="50" id="slider" oninput="moveDivisor()">
             </div>
             
             <!-- Checkered background to show transparency -->
-            <div class="absolute max-h-96 max-w-auto inset-0 -z-10 bg-opacity-50" 
+            <div class="absolute inset-0 -z-10 bg-opacity-50" 
               style="background-image: linear-gradient(45deg, #f0f0f0 25%, transparent 25%), linear-gradient(-45deg, #f0f0f0 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #f0f0f0 75%), linear-gradient(-45deg, transparent 75%, #f0f0f0 75%); 
               background-size: 20px 20px;
               background-position: 0 0, 0 10px, 10px -10px, -10px 0px;">
@@ -229,6 +221,120 @@
     </div>
   </div>
 </section>
+
+<style>
+  div#comparison {
+    position: relative;
+    margin: 0 auto;
+  }
+  
+  div#comparison figure {
+    position: relative;
+    margin: 0; 
+    padding: 0;
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  /* The processed/result image (full width) */
+  div#comparison figure > img {
+    display: block;
+    width: 100%;
+  }
+  
+  /* The original image container */
+  div#comparison figure div#divisor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 2;
+  }
+  
+  /* Slider styling */
+  input[type=range]{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    position: absolute;
+    top: 50%; 
+    left: -2%;
+    background-color: rgba(255,255,255,0);
+    width: 102%; 
+    z-index: 5;
+  }
+  
+  input[type=range]:focus { 
+    outline: none; 
+  }
+  
+  input[type=range]:active { 
+    outline: none;  
+  }
+  
+  input[type=range]::-moz-range-track { 
+    -moz-appearance: none;
+    height: 15px;
+    width: 98%;
+    background-color: rgba(255,255,255,0.1); 
+    position: relative;
+    outline: none;    
+  }
+  
+  input[type=range]::active { 
+    border: none; 
+    outline: none;
+  }
+  
+  /* Circular slider thumb */
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 30px; 
+    height: 30px;   
+    background: white;
+    border: 2px solid #3B82F6;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    transform: translateY(-7px);
+    cursor: pointer;
+    z-index: 10;
+  }
+  
+  input[type=range]::-moz-range-thumb {
+    -moz-appearance: none;
+    width: 30px;
+    height: 30px;
+    background: white;
+    border: 2px solid #3B82F6;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    cursor: pointer;
+    z-index: 10;
+  }
+  
+  input[type=range]:focus::-webkit-slider-thumb {
+    background: white;
+    border-color: #3B82F6;
+  }
+  
+  input[type=range]:focus::-moz-range-thumb {
+    background: white;
+    border-color: #3B82F6;
+  }
+  
+  /* Slider divider line */
+  #comparison #divisor::before {
+    content: '';
+    position: absolute;
+    height: 100%;
+    width: 2px;
+    background: white;
+    right: 0px;
+    z-index: 10;
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+  }
+</style>
 
 <script>
   function imageHandler() {
@@ -334,18 +440,35 @@
         .then(data => {
           this.isProcessing = false;
           this.resultUrl = data.output_url;
-          this.showTransition = true;
           this.step = 3;
           
-          // Start the transition effect
+          // Initialize the slider animation after rendering
           setTimeout(() => {
-            this.showTransition = false;
-          }, 100);
+            // Animated slider intro
+            initializeSlider();
+          }, 300);
         })
         .catch(error => {
           this.isProcessing = false;
           this.errors.server = error.message || 'An error occurred while processing your image';
         });
+      },
+      
+      // Function to ensure both images have the same dimensions
+      adjustImageHeights() {
+        setTimeout(() => {
+          const resultImage = document.getElementById('result-image');
+          const originalImage = document.getElementById('original-image');
+          const comparisonDiv = document.getElementById('comparison');
+          
+          if (resultImage && originalImage && comparisonDiv) {
+            // Set original image height to match result image height
+            originalImage.style.height = resultImage.offsetHeight + 'px';
+            
+            // Make sure comparison div has proper height
+            comparisonDiv.style.height = resultImage.offsetHeight + 'px';
+          }
+        }, 50); // Small delay to ensure images are loaded
       },
       
       resetForm() {
@@ -360,6 +483,55 @@
       }
     };
   }
+  
+  // Image slider functionality
+  function moveDivisor() {
+    var divisor = document.getElementById("divisor");
+    var slider = document.getElementById("slider");
+    if(divisor && slider) {
+      divisor.style.width = slider.value + "%";
+    }
+  }
+  
+  // Initialize slider with animation
+  function initializeSlider() {
+    var slider = document.getElementById("slider");
+    var divisor = document.getElementById("divisor");
+    
+    if(slider && divisor) {
+      // Start slider animation from 0% to 50%
+      slider.value = 0;
+      divisor.style.width = "0%";
+      
+      // Animate the slider to the middle
+      let value = 0;
+      const interval = setInterval(() => {
+        value += 1;
+        slider.value = value;
+        divisor.style.width = value + "%";
+        
+        if (value >= 50) {
+          clearInterval(interval);
+        }
+      }, 10);
+      
+      // Ensure images have matching heights
+      const resultImage = document.getElementById('result-image');
+      const originalImage = document.getElementById('original-image');
+      if (resultImage && originalImage) {
+        originalImage.style.height = resultImage.offsetHeight + 'px';
+      }
+    }
+  }
+  
+  // Listen for window resize to maintain correct image proportions
+  window.addEventListener('resize', function() {
+    const resultImage = document.getElementById('result-image');
+    const originalImage = document.getElementById('original-image');
+    if (resultImage && originalImage) {
+      originalImage.style.height = resultImage.offsetHeight + 'px';
+    }
+  });
 </script>
 
 {% endblock %}

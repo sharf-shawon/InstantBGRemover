@@ -19,6 +19,9 @@ def about(request):
 def faq(request):
     return render(request, "remover/faq.html")
 
+def image_slider(request):
+    return render(request, "remover/image-slider.html")
+
 @csrf_protect  # Add CSRF protection
 def remove_background(request):
     if request.method == "POST":
