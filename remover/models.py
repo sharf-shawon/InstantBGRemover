@@ -18,10 +18,10 @@ def validate_image_resolution(image):
         )
         
 def validate_image_size(image):
-    max_size = 1 * 1024 * 1024  # 5MB
+    max_size = 10 * 1024 * 1024  # 10MB
     if image.size > max_size:
         raise ValidationError(
-            f"Image file size exceeds limit. Maximum allowed size is 5MB."
+            f"Image file size exceeds limit. Maximum allowed size is 10MB."
         )
 
 class ImageUpload(models.Model):
