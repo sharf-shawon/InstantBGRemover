@@ -8,8 +8,6 @@ set -e
 # source /path/to/your/virtualenv/bin/activate
 
 echo "Running Production Post Deployment tasks!"
-# Navigate to the Django project directory
-cd ./app
 
 # Collect static files (optional)
 # Uncomment if you need to collect static files as part of your deploy
